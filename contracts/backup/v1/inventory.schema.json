@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"Collie Barkup v1 media inventory","type":"object","required":["files"],"properties":{"files":{"type":"object","propertyNames":{"pattern":"^[0-9a-f]{64}$"},"additionalProperties":{"type":"integer","minimum":0}}},"additionalProperties":false}
