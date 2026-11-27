@@ -1801,7 +1801,9 @@ async fn live_uploads(a: &App) -> std::io::Result<Vec<UploadState>> {
             return Err(std::io::Error::other("invalid upload directory entry"));
         }
         if retired_dir_name(&name) {
-            let _ = cap_remove_dir_all(&a.cap_root, &a.root, &path);
+            // The previous rename may have succeeded before its sync failed.
+            sync_dir(&uploads_dir)?;
+            let _ = uploads_dir.remove_dir_all(&name);
         } else if !valid_id(&name) {
             return Err(std::io::Error::other("invalid upload session directory"));
         } else if stale(&entry)? {
@@ -1833,7 +1835,9 @@ fn expire_stages(a: &App, active: &[UploadState]) -> std::io::Result<()> {
         }
         let path = backup_path.join(&name);
         if retired_dir_name(&name) {
-            let _ = cap_remove_dir_all(&a.cap_root, &a.root, &path);
+            // Keep prune closed until retirement is durable.
+            sync_dir(&backups)?;
+            let _ = backups.remove_dir_all(&name);
         } else if let Some(ts) = stage_timestamp(&name) {
             if !active
                 .iter()
