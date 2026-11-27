@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"Collie Barkup v1 pair redemption request","type":"object","required":["token"],"properties":{"token":{"type":"string","minLength":1}},"additionalProperties":false}
